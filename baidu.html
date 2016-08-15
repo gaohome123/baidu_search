@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8">
+		<title>Document</title>
+		<style>
+			*{
+				margin: 0;
+				padding: 0;
+			}
+			ul{
+				list-style: none;
+			}
+			#bg{
+				height: 181px;
+				width: 641px;
+				margin: 0 auto;
+				position: relative;
+			}
+			#bg img{
+				width: 270px;
+				height: 129px;
+				position: absolute;
+				bottom: 10px;
+				left: 50%;
+				margin-left: -135px;
+			}
+			#container{
+				width: 641px;
+				height: 40px;
+				margin: 0 auto;
+				position: relative;
+			}
+			#search-text{
+				width: 521px;
+				border: 1px solid #ccc;
+				border-right: none;
+				height: 20px;
+				text-align: left;
+				padding: 9px 7px;
+				font-size: 16px;
+				float: left;
+			}
+			#search-btn{
+				width: 105px;
+				height: 40px;
+				float: left;
+				border: none;
+				background: #3388ff;
+				cursor: pointer;
+				font-size: 16px;
+				color: #fff;
+			}
+			#search-btn:hover{
+				background: #317ef3;
+				border-bottom: 1px solid #2868c8;
+				box-shadow: 1px 1px 1px #ccc;
+			}
+			#container span{
+				display: block;
+				height: 16px;
+				width: 18px;
+				background: url(cam.png) no-repeat;
+				position: absolute;
+				top: 50%;
+				margin-top: -8px;
+				right: 116px;
+				cursor: pointer;
+			}
+			#container span:hover{
+				background-position: 0 -20px;
+			}
+			#search-result{
+				width: 535px;
+				border: 1px solid #ccc;
+				border-top: none;
+				background: #fff;
+				display: none;
+			}
+			#search-result li{
+				text-indent: 10px;
+				font-size: 16px;
+				line-height: 40px;
+			}
+			#search-result li:hover{
+				cursor: pointer;
+				background: #ccc;
+			}
+		</style>
+	</head>
+	<body>
+		<div id="bg"><img src="bg.png" alt=""></div>
+		<div id="container">
+			<input type="text" id="search-text">
+			<span></span>
+			<input type="submit" id="search-btn" value="百度一下">
+			<ul id="search-result">
+			</ul>
+		</div>
+		<script>
+			var arr=['ipad','iphone6','iphone6s','samsung'];//模拟数据
+			var oText = document.getElementById('search-text');
+			var oResult = document.getElementById('search-result');
+			oText.onkeyup = function(e){
+				if(e.which == 38 || e.which == 40 || e.which == 13){//防止按键冲突
+					return;
+				}
+				else{
+				if(this.value!=""){
+					oResult.innerHTML="";
+					for(var i=0;i<arr.length;i++){
+								if(arr[i].indexOf(this.value)!=-1){//指定的字符串值在字符串中首次出现
+									var oLi = document.createElement('li');
+									oLi.innerHTML=arr[i];
+									oResult.appendChild(oLi);//显示下拉框
+									oLi.onclick=function(){
+										oText.value=this.innerHTML;//把下拉框的值放入搜索框
+										oResult.style.display='none';
+									};
+								}
+							}
+							oResult.style.display=oResult.children.length>0?'block':'none';
+						}else{
+								oResult.style.display='none';//输入框为空时将下拉框置空
+							}
+						}
+					};
+					var index = -1;//定义全局变量，防止每次点击都选中同一个元素
+					oText.onkeydown = function(e){
+						if(e.which==40 || e.which==38){
+							if(e.which==40){//按下的时候
+								for(var i=0;i<oResult.children.length;i++){
+									oResult.children[i].style.background='transparent';//先把所有的背景清空
+								}
+								index++;
+								if(index == oResult.children.length){//最后一个时跳到第一个li
+									index=0;
+								}
+								oResult.children[index].style.background='#ccc';//选中元素
+							}else{
+								for(var i=0;i<oResult.children.length;i++){
+									oResult.children[i].style.background='transparent';//先把所有的背景清空
+								}
+								index--;
+								if(index == -1){//第一个时跳到最后一个li
+									index = oResult.children.length-1;
+								}
+								oResult.children[index].style.background='#ccc';
+							}
+						}
+						else if(e.which==13){
+							oText.value=oResult.children[index].innerHTML;
+							oResult.style.display='none';
+							index=-1;
+						}
+					};
+			</script>
+		</body>
+	</html>
